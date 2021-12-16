@@ -1,15 +1,16 @@
 const restifyErrors = require('restify-errors');
-const User = require('../models/User');
+const Customer = require('../models/Customers');
 
 module.exports = (server) => {
   /**
-   * @Get All USERS
+   * @Get All Customers
+   * 
    */
-  server.get('/users', async (req, res, next) => {
+  server.get('/customers', async (req, res, next) => {
     try {
-      const users = await User.find({});
+      const customers = await Customer.find({});
 
-      res.send(200, { success: true, users });
+      res.send(200, { success: true, customers });
       next();
     } catch (error) {
       return next(new restifyErrors.InvalidContentError(error));
@@ -17,29 +18,29 @@ module.exports = (server) => {
   });
 
   /**
-   * @GET Single USER
+   * @GET Single Customer
    *
    */
 
-  server.get('/users/:id', async (req, res, next) => {
+  server.get('/customers/:id', async (req, res, next) => {
     try {
-      const user = await User.findById(req.query.id);
+      const customer = await Customer.findById(req.query.id);
 
-      res.send(200, { success: true, user });
+      res.send(200, { success: true, customer });
       next();
     } catch (error) {
       return next(
         new restifyErrors.ResourceNotFoundError(
-          `There is no User with the id of ${req.query.id}`
+          `There is no Customer with the id of ${req.query.id}`
         )
       );
     }
   });
   /**
-   * @POST Add USERS
+   * @POST Add Customer
    */
 
-  server.post('/users', async (req, res, next) => {
+  server.post('/customers', async (req, res, next) => {
     // Check for JSON
     if (!req.is('application/json')) {
       return next(
@@ -50,13 +51,13 @@ module.exports = (server) => {
     try {
       const { name, email, balance } = req.body;
 
-      const user = await User.create({
+      const customer = await Customer.create({
         name,
         email,
         balance,
       });
 
-      res.send(201, { success: true, user });
+      res.send(201, { success: true, customer });
       next();
     } catch (error) {
       return next(new restifyErrors.InternalError(error.message));
@@ -64,10 +65,10 @@ module.exports = (server) => {
   });
 
   /**
-   * @PUT Update USER
+   * @PUT Update Customer
    */
 
-  server.put('/users/:id', async (req, res, next) => {
+  server.put('/customers/:id', async (req, res, next) => {
     // Check for JSON
     if (!req.is('application/json')) {
       return next(
@@ -76,32 +77,32 @@ module.exports = (server) => {
     }
 
     try {
-      const user = await User.findOneAndUpdate({ _id: req.query.id }, req.body);
+      const customer = await Customer.findOneAndUpdate({ _id: req.query.id }, req.body);
 
-      res.send(201, { success: true, update: user });
+      res.send(201, { success: true, update: customer });
       next();
     } catch (error) {
       return next(
         new restifyErrors.ResourceNotFoundError(
-          `There is no User with the id of ${req.query.id}`
+          `There is no Customer with the id of ${req.query.id}`
         )
       );
     }
   });
 
   /**
-   * @DELETE DELETE USER
+   * @DELETE DELETE Customer
    */
 
-  server.del('/users/:id', async (req, res, next) => {
+  server.del('/customers/:id', async (req, res, next) => {
     try {
-      const user = await User.findOneAndDelete({ _id: req.query.id });
+      const customer = await Customer.findOneAndRemove({ _id: req.query.id });
       res.send(204, { success: true });
       next();
     } catch (error) {
       return next(
         new restifyErrors.ResourceNotFoundError(
-          `There is no User with the id of ${req.query.id}`
+          `There is no Customer with the id of ${req.query.id}`
         )
       );
     }

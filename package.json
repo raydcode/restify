@@ -12,10 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.2",
     "mongoose-timestamp": "^0.6.0",
     "restify": "^8.6.0",
-    "restify-error": "^1.0.0"
+    "restify-error": "^1.0.0",
+    "restify-jwt-community": "^1.1.21"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
