@@ -1,6 +1,7 @@
 const restify = require('restify');
 const mongoose = require('mongoose');
 const config = require('./config');
+const restifyjwt = require('restify-jwt-community');
 
 const server = restify.createServer();
 
@@ -10,6 +11,14 @@ const server = restify.createServer();
 
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
+
+/**
+ * PROTECT ROUTES
+ */
+
+// server.use(
+//   restifyjwt({ secret: config.JWT_SECRET }).unless({ path: ['/auth'] })
+// );
 
 server.listen(config.PORT, () => {
   mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });

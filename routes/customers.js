@@ -1,5 +1,8 @@
 const restifyErrors = require('restify-errors');
 const Customer = require('../models/Customers');
+const restifyjwt = require('restify-jwt-community');
+const config = require('../config');
+
 
 module.exports = (server) => {
   /**
@@ -40,7 +43,7 @@ module.exports = (server) => {
    * @POST Add Customer
    */
 
-  server.post('/customers', async (req, res, next) => {
+  server.post('/customers', restifyjwt({secret:config.JWT_SECRET}), async (req, res, next) => {
     // Check for JSON
     if (!req.is('application/json')) {
       return next(
@@ -68,7 +71,7 @@ module.exports = (server) => {
    * @PUT Update Customer
    */
 
-  server.put('/customers/:id', async (req, res, next) => {
+  server.put('/customers/:id', restifyjwt({secret:config.JWT_SECRET}), async (req, res, next) => {
     // Check for JSON
     if (!req.is('application/json')) {
       return next(
@@ -94,7 +97,7 @@ module.exports = (server) => {
    * @DELETE DELETE Customer
    */
 
-  server.del('/customers/:id', async (req, res, next) => {
+  server.del('/customers/:id', restifyjwt({secret:config.JWT_SECRET}), async (req, res, next) => {
     try {
       const customer = await Customer.findOneAndRemove({ _id: req.query.id });
       res.send(204, { success: true });

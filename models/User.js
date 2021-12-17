@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
 const bcrypt = require('bcryptjs');
-
+const config = require('../config');
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -19,7 +19,6 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please Add a password'],
     minLength: 6,
     maxlength: 32,
-    select: false,
   },
   isActive: {
     type: Boolean,
@@ -29,15 +28,13 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.plugin(timestamp);
 
-
 // Encrypt Password using Bcrypt
 UserSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) {
-      next();
-    }
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  });
-
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(config.SALT_ROUND);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 module.exports = mongoose.model('User', UserSchema);
